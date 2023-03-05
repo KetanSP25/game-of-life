@@ -24,6 +24,8 @@ pipeline{
 			}
 			stage('copy on slave'){
 					steps{
+							sh "chmod -R 777 /mnt/project/game-of-life/gameoflife-web/target/gameoflife.war"
+							sh "sudo su - ketan"
 							sh "scp -r /mnt/project/game-of-life/gameoflife-web/target/gameoflife.war ketan@172.31.38.122:/mnt/wars/"
 					}
 			}
