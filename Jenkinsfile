@@ -4,9 +4,9 @@ pipeline{
 					label 'built-in'
 					customWorkspace '/mnt/project'
 			}
-		}
-		enviornment{
-					qaip= "172.31.38.122"
+			enviornment{
+						qaip= "172.31.38.122"
+			}
 		}
 		stages{
 			stage('clone GOL on master'){
