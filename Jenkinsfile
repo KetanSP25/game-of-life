@@ -19,7 +19,7 @@ pipeline{
 			}
 			stage('deploy GOL on master'){
 					steps{
-							sh "cp /mnt/project/game-of-life/gameoflife-web/target/gameoflife.war /mnt/server/apache-tomcat-9.0.71/webapps"
+							sh "cp /mnt/project/game-of-life/gameoflife-web/target/gameoflife.war /mnt/server/apache-tomcat-9.0.73/webapps"
 					}
 			}
 			stage('copy on slave'){
