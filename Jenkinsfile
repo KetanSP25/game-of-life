@@ -5,6 +5,9 @@ pipeline{
 					customWorkspace '/mnt/project'
 				}
 			}
+		environment{
+					qaip = "172.31.38.122"
+		}
 		stages{
 			stage('clone GOL on master'){
 					steps{
@@ -24,9 +27,8 @@ pipeline{
 			}
 			stage('copy on slave'){
 					steps{
-							sh "chmod -R 777 /mnt/project/game-of-life/gameoflife-web/target/gameoflife.war"
-							sh "sudo su - ketan"
-							sh "scp -r /mnt/project/game-of-life/gameoflife-web/target/gameoflife.war ketan@172.31.38.122:/mnt/wars/"
+							sh "cp /mnt/project/game-of-life/gameoflife-web/target/gameoflife.war /mnt/wars"
+							sh "scp -r /mnt/wars/gameoflife.war ketan@${qaip}:/mnt/wars/"
 					}
 			}
 			stage('deploy on slave'){
@@ -36,7 +38,7 @@ pipeline{
 						}
 					}
 					steps{
-							sh "cp /mnt/wars/gameoflife.war /mnt/server/apache-tomcat-9.0.71/webapps"
+							sh "cp /mnt/wars/gameoflife.war /mnt/server/apache-tomcat-9.0.73/webapps"
 					}
 			}
 		}
