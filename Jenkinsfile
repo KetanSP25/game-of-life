@@ -28,6 +28,7 @@ pipeline{
 			stage('copy on slave'){
 					steps{
 							sh "cp /mnt/project/game-of-life/gameoflife-web/target/gameoflife.war /mnt/wars"
+							sh "chmod +x /mnt/wars/gameoflife.war"
 							sh "scp -r /mnt/wars/gameoflife.war ketan@${qaip}:/mnt/wars/"
 					}
 			}
