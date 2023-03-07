@@ -17,17 +17,18 @@ pipeline{
 			}
 			stage('Build on master'){
 					steps{
+							sh "rm -rf /home/ketan/.m2"
 							sh "cd /mnt/project/game-of-life && mvn clean install"
 					}
 			}
 			stage('deploy GOL on master'){
 					steps{
 							sh "cp /mnt/project/game-of-life/gameoflife-web/target/gameoflife.war /mnt/server/apache-tomcat-9.0.73/webapps"
+							sh "cp /mnt/project/game-of-life/gameoflife-web/target/gameoflife.war /mnt/wars"
 					}
 			}
 			stage('copy on slave'){
 					steps{
-							sh "cp /mnt/project/game-of-life/gameoflife-web/target/gameoflife.war /mnt/wars"
 							sh "chmod +x /mnt/wars/gameoflife.war"
 							sh "scp -r /mnt/wars/gameoflife.war ketan@${qaip}:/mnt/wars/"
 					}
