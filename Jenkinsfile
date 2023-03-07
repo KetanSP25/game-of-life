@@ -1,47 +1,38 @@
 pipeline{
-		agent{
-			label{
-					label 'built-in'
-					customWorkspace '/mnt/project'
+	agent{
+		label{
+			label "built-in"
+			customWorkspace "/mnt/project"
+			}
+		}
+	environment{
+				url = "https://github.com/KetanSP25/game-of-life.git"
+				qaip = "172.31.38.122"
 				}
-			}
-		environment{
-					qaip = "172.31.38.122"
-		}
-		stages{
-			stage('clone GOL on master'){
-					steps{
-							sh "rm -rf *"
-							sh "git clone https://github.com/KetanSP25/game-of-life.git"
-					}
-			}
-			stage('Build on master'){
-					steps{
-							sh "rm -rf /home/ketan/.m2"
-							sh "cd /mnt/project/game-of-life && mvn clean install"
-					}
-			}
-			stage('deploy GOL on master'){
-					steps{
-							sh "cp /mnt/project/game-of-life/gameoflife-web/target/gameoflife.war /mnt/server/apache-tomcat-9.0.73/webapps"
-							sh "cp /mnt/project/game-of-life/gameoflife-web/target/gameoflife.war /mnt/wars"
-					}
-			}
-			stage('copy on slave'){
-					steps{
-							sh "chmod +x /mnt/wars/gameoflife.war"
-							sh "scp -r /mnt/wars/gameoflife.war ketan@${qaip}:/mnt/wars/"
-					}
-			}
-			stage('deploy on slave'){
-					agent{
-						label{
-								label 'qa'
-						}
-					}
-					steps{
-							sh "cp /mnt/wars/gameoflife.war /mnt/server/apache-tomcat-9.0.73/webapps"
-					}
+	stages{
+		stage("copy project"){
+			steps{
+				sh "rm -rf *"
+				sh "git clone ${url}"
 			}
 		}
+		stage("Build-project"){
+			steps{
+				sh "rm -rf /home/ketan/.m2"
+				sh "cd game-of-life && mvn clean install"
+			}
+		}
+		stage("copy wars"){
+			steps{
+				sh "cp game-of-life/gameoflife-web/target/gameoflife.war /mnt/wars"
+			}
+		}
+		stage("deploy on slave"){
+			steps{
+				sh "scp -r /mnt/wars/gameoflife.war ketan@${qaip}:/mnt/wars"
+			}
+		}
+	}
+	
+
 }
